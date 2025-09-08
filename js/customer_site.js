@@ -9,11 +9,6 @@ const CUSTOMER_SITES = {
         name: '电影天堂资源',
         detail: 'http://caiji.dyttzyapi.com'
     },
-    heimuer: {
-        api: 'https://json.heimuer.xyz/api.php/provide/vod',
-        name: '黑木耳',
-        detail: 'https://heimuer.tv'
-    },
     ruyi: {
         api: 'http://cj.rycjapi.com/api.php/provide/vod',
         name: '如意资源'
@@ -60,17 +55,9 @@ const CUSTOMER_SITES = {
         api: 'https://api.zuidapi.com/api.php/provide/vod',
         name: '最大资源'
     },
-    yinghua: {
-        api: 'https://m3u8.apiyhzy.com/api.php/provide/vod',
-        name: '樱花资源'
-    },
     wujin: {
         api: 'https://api.wujinapi.me/api.php/provide/vod',
         name: '无尽资源'
-    },
-    wwzy: {
-        api: 'https://wwzy.tv/api.php/provide/vod',
-        name: '旺旺短剧'
     },
     ikun: {
         api: 'https://ikunzyapi.com/api.php/provide/vod',
