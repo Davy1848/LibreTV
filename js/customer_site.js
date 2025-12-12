@@ -1,9 +1,10 @@
 const CUSTOMER_SITES = {
+    // 原CUSTOMER_SITES中maotaizy的api已修复（含/at/json），保留
     maotaizy: {
-        api: 'https://caiji.maotaizy.cc/api.php/provide/vod/at/json', // 修复拼写错误：josn → json
-        name: '茅台资源',
+        api: 'https://caiji.maotaizy.cc/api.php/provide/vod/at/json', // 修复拼写错误后的地址
+        name: '茅台资源'
     },
-    // 整合其他站点配置，保持与API规范一致
+    // 以下为原CUSTOMER_SITES与新api_site中键名和api均相同的条目（保留）
     dyttzy: {
         api: 'http://caiji.dyttzyapi.com/api.php/provide/vod',
         name: '电影天堂资源',
@@ -70,6 +71,20 @@ const CUSTOMER_SITES = {
     xiaomaomi: {
         api: 'https://zy.xmm.hk/api.php/provide/vod',
         name: '小猫咪资源'
+    },
+    // 新增api_site中独有的条目（原CUSTOMER_SITES中不存在）
+    heimuer: {
+        api: 'https://json.heimuer.xyz/api.php/provide/vod',
+        name: '黑木耳',
+        detail: 'https://heimuer.tv'
+    },
+    yinghua: {
+        api: 'https://m3u8.apiyhzy.com/api.php/provide/vod',
+        name: '樱花资源'
+    },
+    wwzy: {
+        api: 'https://wwzy.tv/api.php/provide/vod',
+        name: '旺旺短剧'
     }
 };
 
