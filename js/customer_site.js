@@ -46,7 +46,6 @@ const CUSTOMER_SITES = {
         api: 'https://wwzy.tv/api.php/provide/vod',
         name: '旺旺短剧'
     },
-
     // 第二层：备用API（稳定性较好）
     maotaizy: {
         api: 'https://caiji.maotaizy.cc/api.php/provide/vod/at/json',
@@ -190,67 +189,13 @@ const CUSTOMER_SITES = {
     kuaibo: {
         api: 'https://www.kuaibozy.com/api.php/provide/vod/from/kbm3u8/at/xml/',
         name: '快播资源'
-    },
-
-    // 第三层：测试API（稳定性较差，最后尝试）
-    kaifang: {
-        api: 'https://api.kaifangzy.com/api.php/provide/vod',
-        name: '开放电影',
-        detail: 'https://kaifangzy.com'
-    },
-    senlin: {
-        api: 'https://api.senlinzy.com/api.php/provide/vod',
-        name: '森林资源'
-    },
-    wangmin: {
-        api: 'https://api.wangminzy.com/api.php/provide/vod',
-        name: '网民电影'
-    },
-    piaohua: {
-        api: 'https://api.piaohua.com/api.php/provide/vod',
-        name: '飘花电影'
-    },
-    aidan: {
-        api: 'https://api.aidanyy.com/api.php/provide/vod',
-        name: '艾旦影视'
-    },
-    aosika: {
-        api: 'https://api.aosikazy.com/api.php/provide/vod',
-        name: '奥斯卡资源网'
-    },
-    feisu: {
-        api: 'https://api.feisuzy.com/api.php/provide/vod',
-        name: '飞速资源'
-    },
-    jinying: {
-        api: 'https://jyzyapi.com/api.php/provide/vod/from/jinyingm3u8',
-        name: '金鹰资源'
-    },
-    shandian: {
-        api: 'https://sdzyapi.com/api.php/provide/vod/from/sdm3u8',
-        name: '闪电资源'
-    },
-    shandian2: {
-        api: 'https://sdzyapi.com/api.php/provide/vod',
-        name: '闪电资源'
-    },
-    "39kan": {
-        api: 'https://39kan.com/api.php/provide/vod',
-        name: '39影视'
-    },
-    tiantang: {
-        api: 'https://vipmv.cc/api.php/provide/vod',
-        name: '天堂资源'
     }
 };
-
 // API分层配置
 const API_LAYERS = {
     core: ['zuid', 'wujin', 'bfzy', 'tyyszy', 'zy360', 'jisu', 'dbzy', 'mozhua', 'mdzy', 'ikun', 'wwzy'],
-    backup: ['maotaizy', 'dyttzy', 'ruyi', 'wolong', 'lzi', 'xiaomaomi', 'heimuer', 'yinghua', 'youzhi', 'kudian', 'yingku', 'kuaiche', 'guangsu', 'laoya', 'beidou', 'tiankong', 'okzy', 'okzy_kuyun', 'okzy_ckm3u8', 'hongniu', 'lehuo', 'tangrenjie', 'tantan', 'haiwaikan', 'baiduyun', 'uku', 'fanqie', '8090zy', 'qilin', 'kuaibo'],
-    test: ['kaifang', 'senlin', 'wangmin', 'piaohua', 'aidan', 'aosika', 'feisu', 'jinying', 'shandian', 'shandian2', '39kan', 'tiantang']
+    backup: ['maotaizy', 'dyttzy', 'ruyi', 'wolong', 'lzi', 'xiaomaomi', 'heimuer', 'yinghua', 'youzhi', 'kudian', 'yingku', 'kuaiche', 'guangsu', 'laoya', 'beidou', 'tiankong', 'okzy', 'okzy_kuyun', 'okzy_ckm3u8', 'hongniu', 'lehuo', 'tangrenjie', 'tantan', 'haiwaikan', 'baiduyun', 'uku', 'fanqie', '8090zy', 'qilin', 'kuaibo']
 };
-
 // 调用全局方法合并
 if (window.extendAPISites) {
     window.extendAPISites(CUSTOMER_SITES);
