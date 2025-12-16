@@ -1,5 +1,5 @@
 const CUSTOMER_SITES = {
-    // 第一层：核心API（最稳定，优先使用）
+    // 所有资源API（不分层，一次搜索所有）
     zuid: {
         api: 'https://api.zuidapi.com/api.php/provide/vod',
         name: '最大资源',
@@ -46,7 +46,6 @@ const CUSTOMER_SITES = {
         api: 'https://wwzy.tv/api.php/provide/vod',
         name: '旺旺短剧'
     },
-    // 第二层：备用API（稳定性较好）
     maotaizy: {
         api: 'https://caiji.maotaizy.cc/api.php/provide/vod/at/json',
         name: '茅台资源',
@@ -181,15 +180,18 @@ const CUSTOMER_SITES = {
         name: '快播资源'
     }
 };
-// API分层配置
+// API配置 - 不分层，一次搜索所有资源
 const API_LAYERS = {
-    core: ['zuid', 'wujin', 'bfzy', 'tyyszy', 'zy360', 'jisu', 'dbzy', 'mozhua', 'mdzy', 'ikun', 'wwzy'],
-    backup: ['maotaizy', 'dyttzy', 'ruyi', 'wolong', 'lzi', 'xiaomaomi', 'heimuer', 'yinghua', 'youzhi', 'kudian', 'yingku', 'kuaiche', 'guangsu', 'laoya', 'beidou', 'tiankong', 'okzy', 'okzy_kuyun', 'okzy_ckm3u8', 'hongniu', 'lehuo', 'tangrenjie', 'tantan', 'haiwaikan', 'baiduyun', 'uku', 'fanqie', '8090zy', 'qilin', 'kuaibo']
+    all: ['zuid', 'wujin', 'bfzy', 'tyyszy', 'zy360', 'jisu', 'dbzy', 'mozhua', 'mdzy', 'ikun', 'wwzy', 
+          'maotaizy', 'wolong', 'lzi', 'xiaomaomi', 'heimuer', 'yinghua', 'youzhi', 'kudian', 'yingku', 
+          'kuaiche', 'guangsu', 'laoya', 'beidou', 'tiankong', 'okzy', 'okzy_kuyun', 'okzy_ckm3u8', 
+          'hongniu', 'lehuo', 'tangrenjie', 'tantan', 'haiwaikan', 'baiduyun', 'uku', 'fanqie', 
+          '8090zy', 'qilin', 'kuaibo']
 };
 // 调用全局方法合并
 if (window.extendAPISites) {
     window.extendAPISites(CUSTOMER_SITES);
-    // 扩展API分层配置
+    // 扩展API配置
     if (window.extendAPILayers) {
         window.extendAPILayers(API_LAYERS);
     }
