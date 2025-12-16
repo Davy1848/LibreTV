@@ -180,21 +180,9 @@ const CUSTOMER_SITES = {
         name: '快播资源'
     }
 };
-// API配置 - 不分层，一次搜索所有资源
-const API_LAYERS = {
-    all: ['zuid', 'wujin', 'bfzy', 'tyyszy', 'zy360', 'jisu', 'dbzy', 'mozhua', 'mdzy', 'ikun', 'wwzy', 
-          'maotaizy', 'wolong', 'lzi', 'xiaomaomi', 'heimuer', 'yinghua', 'youzhi', 'kudian', 'yingku', 
-          'kuaiche', 'guangsu', 'laoya', 'beidou', 'tiankong', 'okzy', 'okzy_kuyun', 'okzy_ckm3u8', 
-          'hongniu', 'lehuo', 'tangrenjie', 'tantan', 'haiwaikan', 'baiduyun', 'uku', 'fanqie', 
-          '8090zy', 'qilin', 'kuaibo']
-};
 // 调用全局方法合并
 if (window.extendAPISites) {
     window.extendAPISites(CUSTOMER_SITES);
-    // 扩展API配置
-    if (window.extendAPILayers) {
-        window.extendAPILayers(API_LAYERS);
-    }
 } else {
     console.error("错误：请先加载 config.js！");
 }
