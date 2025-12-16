@@ -1,14 +1,11 @@
 const CUSTOMER_SITES = {
-    // 所有资源API（不分层，一次搜索所有）
     zuid: {
         api: 'https://api.zuidapi.com/api.php/provide/vod',
         name: '最大资源',
-        detail: 'https://zuidapi.com'
     },
     wujin: {
         api: 'https://api.wujinapi.me/api.php/provide/vod',
         name: '无尽资源',
-        detail: 'https://wujinapi.me'
     },
     bfzy: {
         api: 'https://bfzyapi.com/api.php/provide/vod',
@@ -49,87 +46,70 @@ const CUSTOMER_SITES = {
     maotaizy: {
         api: 'https://caiji.maotaizy.cc/api.php/provide/vod/at/json',
         name: '茅台资源',
-        detail: 'https://maotaizy.cc'
     },
     wolong: {
         api: 'https://collect.wolongzyw.com/api.php/provide/vod',
         name: '卧龙资源',
-        detail: 'https://wolongzyw.com'
     },
     lzi: {
         api: 'https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8',
         name: '量子资源',
-        detail: 'https://lziapi.com'
     },
     xiaomaomi: {
         api: 'https://zy.xmm.hk/api.php/provide/vod',
         name: '小猫咪资源',
-        detail: 'https://xmm.hk'
     },
     heimuer: {
         api: 'https://json.heimuer.xyz/api.php/provide/vod',
         name: '黑木耳',
-        detail: 'https://heimuer.xyz'
     },
     yinghua: {
         api: 'https://m3u8.apiyhzy.com/api.php/provide/vod',
         name: '樱花资源',
-        detail: 'https://apiyhzy.com'
     },
     youzhi: {
         api: 'https://api.1080zyku.com/inc/api.php/provide/vod',
         name: '优质资源库',
-        detail: 'https://1080zyku.com'
     },
     kudian: {
         api: 'https://api.kuapi.cc/api.php/provide/vod',
         name: '酷点资源',
-        detail: 'https://kuapi.cc'
     },
     yingku: {
         api: 'https://api.ykapi.net/api.php/provide/vod',
         name: '影库资源网',
-        detail: 'https://ykapi.net'
     },
     kuaiche: {
         api: 'https://caiji.kczyapi.com/api.php/provide/vod/from/kcm3u8',
         name: '快车资源',
-        detail: 'https://kczyapi.com'
     },
     guangsu: {
         api: 'https://api.guangsuapi.com/api.php/provide/vod/from/gsm3u8',
         name: '光速资源',
-        detail: 'https://guangsuapi.com'
     },
     laoya: {
         api: 'https://api.apilyzy.com/api.php/provide/vod',
         name: '老鸭资源采集',
-        detail: 'https://apilyzy.com'
     },
     beidou: {
         api: 'https://m3u8.bdxzyapi.com/api.php/provide/vod',
         name: '北斗星资源',
-        detail: 'https://bdxzyapi.com'
     },
     tiankong: {
         api: 'https://m3u8.tiankongapi.com/api.php/provide/vod/from/tkm3u8',
         name: '天空资源',
-        detail: 'https://tiankongapi.com'
     },
     okzy: {
         api: 'https://cj.okzy.tv/inc/api.php',
         name: 'OK资源站',
-        detail: 'https://okzy.tv'
     },
     okzy_kuyun: {
         api: 'https://cj.okzy.tv/inc/apikuyuns.php',
         name: 'OK资源站(kuyun)',
-        detail: 'https://okzy.tv'
     },
     okzy_ckm3u8: {
         api: 'https://cj.okzy.tv/inc/apickm3u8s.php',
         name: 'OK资源站(ckm3u8)',
-        detail: 'https://okzy.tv'
     },
     hongniu: {
         api: 'https://hongniuzy2.com/api.php/provide/vod/from/hnm3u8',
@@ -154,22 +134,18 @@ const CUSTOMER_SITES = {
     baiduyun: {
         api: 'https://api.apibdzy.com/api.php/provide/vod/?ac=list',
         name: '百度云资源',
-        detail: 'https://apibdzy.com'
     },
     uku: {
         api: 'https://api.ukuapi.com/api.php/provide/vod/at/xml/',
         name: 'U酷资源',
-        detail: 'https://ukuapi.com'
     },
     fanqie: {
         api: 'https://api.fqzy.cc/api.php/provide/vod/?ac=list',
         name: '番茄资源',
-        detail: 'https://fqzy.cc'
     },
     "8090zy": {
         api: 'https://zy.yilans.net:8090/api.php/provide/vod/?ac=list',
         name: '8090资源',
-        detail: 'https://yilans.net'
     },
     qilin: {
         api: 'https://www.qilinzyz.com/api.php/provide/vod/?ac=list',
