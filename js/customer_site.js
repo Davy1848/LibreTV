@@ -127,7 +127,7 @@ const SITE_CONFIG = {
   wujin: {
     api: 'https://api.wujinapi.me/api.php/provide/vod',
     name: '无尽资源',
-  },
+  }
 };
 
 // 调用全局方法合并
