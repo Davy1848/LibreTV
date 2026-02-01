@@ -141,7 +141,7 @@ const SITE_CONFIG = {
   wujin: {
     api: 'https://api.wujinapi.me/api.php/provide/vod',
     name: '无尽资源',
-  },
+  }
 };
 
 // API站点配置
