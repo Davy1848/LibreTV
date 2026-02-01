@@ -8,150 +8,118 @@ const MAX_HISTORY_ITEMS = 5;
 // 注意：PASSWORD 环境变量是必需的，所有部署都必须设置密码以确保安全
 const PASSWORD_CONFIG = {
     localStorageKey: 'passwordVerified',  // 存储验证状态的键名
-    verificationTTL: 90 * 24 * 60 * 60 * 1000,  // 验证有效期（90天，约3个月）
+    verificationTTL: 90 * 24 * 60 * 60 * 1000  // 验证有效期（90天，约3个月）
 };
 
 // 网站信息配置
 const SITE_CONFIG = {
-  dyttzy: {
-    api: 'http://caiji.dyttzyapi.com/api.php/provide/vod',
-    name: '电影天堂资源',
-  },
-  maoyan: {
-    api: 'https://api.maoyanapi.top/api.php/provide/vod',
-    name: '猫眼资源',
-  },
-  zy360: {
-    api: 'https://360zyzz.com/api.php/provide/vod',
-    name: '360资源',
-  },
-  ffzy: {
-    api: 'https://api.ffzyapi.com/api.php/provide/vod',
-    name: '非凡资源',
-    detail: 'http://ffzy5.tv', // 保留原有效detail
-  },
-  kuaiche: {
-    api: 'https://caiji.kczyapi.com/api.php/provide/vod/from/kcm3u8',
-    name: '快车资源',
-  },
-  wwzy: {
-    api: 'https://wwzy.tv/api.php/provide/vod',
-    name: '旺旺短剧',
-  },
-  wolong: {
-    api: 'https://wolongzyw.com/api.php/provide/vod',
-    name: '卧龙资源',
-  },
-  guangsu: {
-    api: 'https://api.guangsuapi.com/api.php/provide/vod',
-    name: '光速资源',
-  },
-  zuid: {
-    api: 'https://api.zuidapi.com/api.php/provide/vod',
-    name: '最大资源',
-  },
-  wwzy_api: {
-    api: 'https://api.wwzy.tv/api.php/provide/vod',
-    name: '旺旺资源',
-  },
-  iqiyi: {
-    api: 'https://iqiyizyapi.com/api.php/provide/vod',
-    name: 'iqiyi资源',
-  },
-  dbzy: {
-    api: 'https://caiji.dbzy5.com/api.php/provide/vod',
-    name: '豆瓣资源',
-  },
-  tyyszy: {
-    api: 'https://tyyszy.com/api.php/provide/vod',
-    name: '天涯资源',
-  },
-  maotai: {
-    api: 'https://caiji.maotaizy.cc/api.php/provide/vod',
-    name: '茅台资源',
-  },
-  mdzy: {
-    api: 'https://www.mdzyapi.com/api.php/provide/vod',
-    name: '魔都资源',
-  },
-  lzi: {
-    api: 'https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8',
-    name: '量子资源站',
-  },
-  kuaibo: {
-    api: 'https://www.kuaibozy.com/api.php/provide/vod/from/kbm3u8/at/xml/',
-    name: '快播资源',
-  },
-  xinlang: {
-    api: 'https://api.xinlangapi.com/xinlangapi.php/provide/vod',
-    name: '新浪资源',
-  },
-  jinying: {
-    api: 'https://jinyingzy.com/api.php/provide/vod',
-    name: '金鹰点播',
-  },
-  hongniu: {
-    api: 'https://www.hongniuzy2.com/api.php/provide/vod',
-    name: '红牛资源',
-  },
-  subo: {
-    api: 'https://subocaiji.com/api.php/provide/vod',
-    name: '速播资源',
-  },
-  jisu: {
-    api: 'https://jszyapi.com/api.php/provide/vod',
-    name: '极速资源',
-  },
-  modu_dm: {
-    api: 'https://caiji.moduapi.cc/api.php/provide/vod',
-    name: '魔都动漫',
-  },
-  piaoling: {
-    api: 'https://p2100.net/api.php/provide/vod',
-    name: '飘零资源',
-  },
-  aidan: {
-    api: 'https://lovedan.net/api.php/provide/vod',
-    name: '艾旦影视',
-  },
-  uku: {
-    api: 'https://api.ukuapi88.com/api.php/provide/vod',
-    name: 'U酷影视',
-  },
-  haohua: {
-    api: 'https://hhzyapi.com/api.php/provide/vod',
-    name: '豪华资源',
-  },
-  baidu: {
-    api: 'https://api.apibdzy.com/api.php/provide/vod',
-    name: '百度云资源',
-  },
-  bfzy: {
-    api: 'https://bfzyapi.com/api.php/provide/vod',
-    name: '暴风资源',
-  },
-  yinghua: {
-    api: 'https://m3u8.apiyhzy.com/api.php/provide/vod',
-    name: '樱花资源',
-  },
-  ruyi: {
-    api: 'https://cj.rycjapi.com/api.php/provide/vod',
-    name: '如意资源',
-  },
-  wujin: {
-    api: 'https://api.wujinapi.me/api.php/provide/vod',
-    name: '无尽资源',
-  }
+    name: 'LibreTV',
+    url: 'https://libretv.is-an.org',
+    description: '免费在线视频搜索与观看平台',
+    logo: 'image/logo.png',
+    version: '1.0.3'
 };
 
 // API站点配置
-// ARCHIVE https://telegra.ph/APIs-08-12（注释移至对象外，修复核心错误）
 const API_SITES = {
+    dyttzy: {
+        api: 'http://caiji.dyttzyapi.com/api.php/provide/vod',
+        name: '电影天堂资源',
+        detail: 'http://caiji.dyttzyapi.com',
+    },
+    ruyi: {
+        api: 'https://cj.rycjapi.com/api.php/provide/vod',
+        name: '如意资源',
+    },
+    bfzy: {
+        api: 'https://bfzyapi.com/api.php/provide/vod',
+        name: '暴风资源',
+    },
+    tyyszy: {
+        api: 'https://tyyszy.com/api.php/provide/vod',
+        name: '天涯资源',
+    },
+    xiaomaomi: {
+        api: 'https://zy.xmm.hk/api.php/provide/vod',
+        name: '小猫咪资源',
+    },
+    ffzy: {
+        api: 'http://ffzy5.tv/api.php/provide/vod',
+        name: '非凡影视',
+        detail: 'http://ffzy5.tv',
+    },
+    heimuer: {
+        api: 'https://json.heimuer.xyz/api.php/provide/vod',
+        name: '黑木耳',
+        detail: 'https://heimuer.tv',
+    },
+    zy360: {
+        api: 'https://360zy.com/api.php/provide/vod',
+        name: '360资源',
+    },
+    iqiyi: {
+        api: 'https://www.iqiyizyapi.com/api.php/provide/vod',
+        name: 'iqiyi资源',
+    },
+    wolong: {
+        api: 'https://wolongzyw.com/api.php/provide/vod',
+        name: '卧龙资源',
+    },
+    hwba: {
+        api: 'https://cjhwba.com/api.php/provide/vod',
+        name: '华为吧资源',
+    },
+    jisu: {
+        api: 'https://jszyapi.com/api.php/provide/vod',
+        name: '极速资源',
+        detail: 'https://jszyapi.com',
+    },
+    dbzy: {
+        api: 'https://dbzy.tv/api.php/provide/vod',
+        name: '豆瓣资源',
+    },
+    mozhua: {
+        api: 'https://mozhuazy.com/api.php/provide/vod',
+        name: '魔爪资源',
+    },
+    mdzy: {
+        api: 'https://www.mdzyapi.com/api.php/provide/vod',
+        name: '魔都资源',
+    },
+    zuid: {
+        api: 'https://api.zuidapi.com/api.php/provide/vod',
+        name: '最大资源'
+    },
+    yinghua: {
+        api: 'https://m3u8.apiyhzy.com/api.php/provide/vod',
+        name: '樱花资源'
+    },
+    baidu: {
+        api: 'https://api.apibdzy.com/api.php/provide/vod',
+        name: '百度云资源'
+    },
+    wujin: {
+        api: 'https://api.wujinapi.me/api.php/provide/vod',
+        name: '无尽资源'
+    },
+    wwzy: {
+        api: 'https://wwzy.tv/api.php/provide/vod',
+        name: '旺旺短剧'
+    },
+    ikun: {
+        api: 'https://ikunzyapi.com/api.php/provide/vod',
+        name: 'iKun资源'
+    },
+    lzi: {
+        api: 'https://cj.lziapi.com/api.php/provide/vod/',
+        name: '量子资源站'
+    },
     testSource: {
         api: 'https://www.example.com/api.php/provide/vod',
         name: '空内容测试源',
-        adult: true, // 补充尾逗号，提升扩展性
-    },
+        adult: true
+    }
+    //ARCHIVE https://telegra.ph/APIs-08-12
 };
 
 // 定义合并方法
@@ -170,7 +138,7 @@ const AGGREGATED_SEARCH_CONFIG = {
     timeout: 8000,            // 单个源超时时间（毫秒）
     maxResults: 10000,          // 最大结果数量
     parallelRequests: true,   // 是否并行请求所有源
-    showSourceBadges: true,    // 是否显示来源徽章
+    showSourceBadges: true    // 是否显示来源徽章
 };
 
 // 抽象API请求配置
@@ -182,17 +150,17 @@ const API_CONFIG = {
         maxPages: 50, // 最大获取页数
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept': 'application/json',
-        },
+            'Accept': 'application/json'
+        }
     },
     detail: {
         // 只拼接参数部分
         path: '?ac=videolist&ids=',
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept': 'application/json',
-        },
-    },
+            'Accept': 'application/json'
+        }
+    }
 };
 
 // 优化后的正则表达式模式
@@ -211,7 +179,7 @@ const PLAYER_CONFIG = {
     filterAds: true,  // 是否启用广告过滤
     autoPlayNext: true,  // 默认启用自动连播功能
     adFilteringEnabled: true, // 默认开启分片广告过滤
-    adFilteringStorage: 'adFilteringEnabled', // 存储广告过滤设置的键名
+    adFilteringStorage: 'adFilteringEnabled' // 存储广告过滤设置的键名
 };
 
 // 增加错误信息本地化
@@ -220,7 +188,7 @@ const ERROR_MESSAGES = {
     TIMEOUT_ERROR: '请求超时，服务器响应时间过长',
     API_ERROR: 'API接口返回错误，请尝试更换数据源',
     PLAYER_ERROR: '播放器加载失败，请尝试其他视频源',
-    UNKNOWN_ERROR: '发生未知错误，请刷新页面重试',
+    UNKNOWN_ERROR: '发生未知错误，请刷新页面重试'
 };
 
 // 添加进一步安全设置
@@ -240,7 +208,7 @@ const CUSTOM_API_CONFIG = {
     validateUrl: true,        // 验证URL格式
     cacheResults: true,       // 缓存测试结果
     cacheExpiry: 5184000000,  // 缓存过期时间(2个月)
-    adultPropName: 'isAdult', // 用于标记成人内容的属性名
+    adultPropName: 'isAdult' // 用于标记成人内容的属性名
 };
 
 // 隐藏内置黄色采集站API的变量
