@@ -16,7 +16,6 @@ const SITE_CONFIG = {
   dyttzy: {
     api: 'http://caiji.dyttzyapi.com/api.php/provide/vod',
     name: '电影天堂资源',
-    detail: 'http://caiji.dyttzyapi.com',
   },
   maoyan: {
     api: 'https://api.maoyanapi.top/api.php/provide/vod',
@@ -102,7 +101,6 @@ const SITE_CONFIG = {
   jisu: {
     api: 'https://jszyapi.com/api.php/provide/vod',
     name: '极速资源',
-    detail: 'https://jszyapi.com', // 保留原有效detail
   },
   modu_dm: {
     api: 'https://caiji.moduapi.cc/api.php/provide/vod',
