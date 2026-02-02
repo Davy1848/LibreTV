@@ -499,6 +499,306 @@ async function fetchDoubanData(url) {
     }
 }
 
+// WMDB API 配置
+const WMDB_CONFIG = {
+    api: 'https://api.wmdb.tv/movie/api', // 主接口（支持豆瓣ID/名称搜索）
+    posterUrl: 'https://wmdb.querydata.org/movie/poster/', // 海报前缀
+    name: 'WMDB 双语海报刮削'
+};
+
+// TMDB API 配置
+const TMDB_CONFIG = {
+    api: 'https://api.tmdb.org/3/search/movie', // 电影搜索接口
+    tvApi: 'https://api.tmdb.org/3/search/tv',  // 剧集搜索接口
+    posterUrl: 'https://image.tmdb.org/t/p/w500', // 海报地址前缀（w500 为尺寸，可改为 w780 高清）
+    name: 'TMDB 海报刮削（国内可用）'
+};
+
+// OMDb API 配置
+const OMDB_CONFIG = {
+    api: 'https://www.omdbapi.com/?apikey=68355d6b&type=movie&t=', // 固定密钥（公开测试用）
+    name: 'OMDb 海报刮削'
+};
+
+// 国内影视聚合刮削配置
+const CN_SCRAPER_CONFIG = {
+    api: 'https://api.douban-imdb-api.rovecat.com/api/v1/movie/search',
+    name: '国内影视海报刮削'
+};
+
+// 从 WMDB API 获取双语海报
+async function getWMDBPoster(title, year = '') {
+    try {
+        // 构建请求 URL
+        const params = new URLSearchParams();
+        params.append('name', title);
+        if (year) {
+            params.append('year', year);
+        }
+        const url = `${WMDB_CONFIG.api}?${params.toString()}`;
+        
+        // 发送请求
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`WMDB API 请求失败: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // 检查返回数据
+        if (data && data.poster) {
+            return data.poster;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("获取 WMDB 海报失败：", error);
+        return null;
+    }
+}
+
+// 从 TMDB API 获取海报
+async function getTMDBPoster(title, type = 'movie') {
+    try {
+        // 构建请求 URL
+        const apiUrl = type === 'movie' ? TMDB_CONFIG.api : TMDB_CONFIG.tvApi;
+        const params = new URLSearchParams();
+        params.append('query', title);
+        params.append('language', 'zh-CN');
+        params.append('include_adult', 'false');
+        const url = `${apiUrl}?${params.toString()}`;
+        
+        // 发送请求
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`TMDB API 请求失败: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // 检查返回数据
+        if (data && data.results && data.results.length > 0) {
+            const firstResult = data.results[0];
+            if (firstResult.poster_path) {
+                return `${TMDB_CONFIG.posterUrl}${firstResult.poster_path}`;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("获取 TMDB 海报失败：", error);
+        return null;
+    }
+}
+
+// 从 OMDb API 获取海报
+async function getOMDBPoster(title, year = '') {
+    try {
+        // 构建请求 URL
+        let url = `${OMDB_CONFIG.api}${encodeURIComponent(title)}`;
+        if (year) {
+            url += `&y=${year}`;
+        }
+        url += '&r=json';
+        
+        // 发送请求
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`OMDb API 请求失败: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // 检查返回数据
+        if (data && data.Response === 'True' && data.Poster && data.Poster !== 'N/A') {
+            return data.Poster;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("获取 OMDb 海报失败：", error);
+        return null;
+    }
+}
+
+// 从国内影视聚合 API 获取海报
+async function getCNScraperPoster(title) {
+    try {
+        // 构建请求 URL
+        const params = new URLSearchParams();
+        params.append('keyword', title);
+        const url = `${CN_SCRAPER_CONFIG.api}?${params.toString()}`;
+        
+        // 发送请求
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`国内影视聚合 API 请求失败: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // 检查返回数据
+        if (data && data.result && data.result.length > 0) {
+            const firstResult = data.result[0];
+            if (firstResult.poster) {
+                return firstResult.poster;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error("获取国内影视聚合海报失败：", error);
+        return null;
+    }
+}
+
+// 智能选择海报刮削源
+async function getPoster(title, type = 'movie') {
+    // 优先级：WMDB → TMDB → OMDb → 国内影视聚合
+    let poster = await getWMDBPoster(title);
+    
+    if (!poster) {
+        poster = await getTMDBPoster(title, type);
+    }
+    
+    if (!poster) {
+        poster = await getOMDBPoster(title);
+    }
+    
+    if (!poster) {
+        poster = await getCNScraperPoster(title);
+    }
+    
+    return poster;
+}
+
+// 缓存海报图片到本地
+async function cachePosterImage(url, key) {
+    try {
+        // 限制并发缓存数量
+        if (cachePosterImage.inProgress >= 3) {
+            setTimeout(() => cachePosterImage(url, key), 100);
+            return;
+        }
+        
+        cachePosterImage.inProgress = (cachePosterImage.inProgress || 0) + 1;
+        
+        const response = await fetch(url);
+        const blob = await response.blob();
+        
+        // 限制图片大小，只缓存小于1MB的图片
+        if (blob.size > 1024 * 1024) {
+            console.log(`图片 ${key} 过大，跳过缓存`);
+            cachePosterImage.inProgress--;
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            try {
+                const base64data = reader.result;
+                // 检查localStorage容量，避免超出限制
+                if (base64data.length < 500000) { // 限制为500KB
+                    localStorage.setItem(`poster_${key}`, base64data);
+                    localStorage.setItem(`poster_${key}_time`, Date.now().toString());
+                }
+            } catch (e) {
+                console.error("存储图片到本地失败：", e);
+            } finally {
+                cachePosterImage.inProgress--;
+            }
+        };
+        reader.onerror = function() {
+            console.error("读取图片失败：", reader.error);
+            cachePosterImage.inProgress--;
+        };
+        reader.readAsDataURL(blob);
+    } catch (error) {
+        console.error("缓存海报图片失败：", error);
+        cachePosterImage.inProgress--;
+    }
+}
+
+// 获取缓存的海报图片
+function getCachedPosterImage(key) {
+    try {
+        const cachedImage = localStorage.getItem(`poster_${key}`);
+        const cachedTime = localStorage.getItem(`poster_${key}_time`);
+        
+        // 检查缓存是否过期（7天）
+        if (cachedImage && cachedTime) {
+            const now = Date.now();
+            const cacheTime = parseInt(cachedTime);
+            if (now - cacheTime < 7 * 24 * 60 * 60 * 1000) {
+                return cachedImage;
+            } else {
+                // 缓存过期，删除
+                localStorage.removeItem(`poster_${key}`);
+                localStorage.removeItem(`poster_${key}_time`);
+            }
+        }
+    } catch (e) {
+        console.error("读取缓存图片失败：", e);
+    }
+    return null;
+}
+
+// 内存缓存，用于快速访问最近的海报
+const memoryCache = new Map();
+// 内存缓存大小限制
+const MAX_MEMORY_CACHE_SIZE = 50;
+
+// 管理内存缓存大小
+function manageMemoryCache() {
+    if (memoryCache.size > MAX_MEMORY_CACHE_SIZE) {
+        // 删除最旧的一半缓存
+        const keys = Array.from(memoryCache.keys());
+        const deleteCount = Math.floor(keys.length / 2);
+        for (let i = 0; i < deleteCount; i++) {
+            memoryCache.delete(keys[i]);
+        }
+    }
+}
+
+// 预加载海报图片
+function preloadPosterImages(items) {
+    items.forEach(item => {
+        if (item.cover) {
+            const img = new Image();
+            img.src = item.cover;
+            // 缓存图片到内存
+            const cacheKey = `douban_${item.id || item.title}`;
+            memoryCache.set(cacheKey, item.cover);
+            // 管理内存缓存大小
+            manageMemoryCache();
+            // 异步缓存到本地存储
+            setTimeout(() => {
+                cachePosterImage(item.cover, cacheKey);
+            }, 0);
+        }
+    });
+}
+
 // 抽取渲染豆瓣卡片的逻辑到单独函数
 function renderDoubanCards(data, container) {
     // 创建文档片段以提高性能
@@ -513,54 +813,198 @@ function renderDoubanCards(data, container) {
         `;
         fragment.appendChild(emptyEl);
     } else {
+        // 立即预加载海报图片，不延迟
+        preloadPosterImages(data.subjects);
+        
         // 循环创建每个影视卡片
-        data.subjects.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "bg-[#111] hover:bg-[#222] transition-all duration-300 rounded-lg overflow-hidden flex flex-col transform hover:scale-105 shadow-md hover:shadow-lg";
-            
-            // 生成卡片内容，确保安全显示（防止XSS）
-            const safeTitle = item.title
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-            
-            const safeRate = (item.rate || "暂无")
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            
-            // 为不同设备优化卡片布局
-            card.innerHTML = `
-                <div class="relative w-full aspect-[2/3] overflow-hidden cursor-pointer bg-black flex items-center justify-center" onclick="fillAndSearchWithDouban('${safeTitle}')">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
-                    <div class="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-sm">
-                        <span class="text-yellow-400">★</span> ${safeRate}
+            data.subjects.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "bg-[#111] hover:bg-[#222] transition-all duration-300 rounded-lg overflow-hidden flex flex-col transform hover:scale-105 shadow-md hover:shadow-lg";
+                
+                // 生成卡片内容，确保安全显示（防止XSS）
+                const safeTitle = item.title
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+                
+                const safeRate = (item.rate || "暂无")
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                
+                // 获取缓存的海报图片
+                const cacheKey = `douban_${item.id || item.title}`;
+                
+                // 优先检查内存缓存
+                let posterUrl = memoryCache.get(cacheKey);
+                // 然后检查本地存储缓存
+                const cachedImage = !posterUrl ? getCachedPosterImage(cacheKey) : null;
+                
+                // 为不同设备优化卡片布局
+                card.innerHTML = `
+                    <div class="poster-container relative w-full aspect-[2/3] overflow-hidden cursor-pointer bg-black flex items-center justify-center" onclick="fillAndSearchWithDouban('${safeTitle}')">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
+                        <div class="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-sm">
+                            <span class="text-yellow-400">★</span> ${safeRate}
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-sm hover:bg-[#333] transition-colors">
+                            <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="在豆瓣查看" onclick="event.stopPropagation();">
+                                🔗
+                            </a>
+                        </div>
+                        <!-- 显示标题占位符 -->
+                        <div class="absolute bottom-8 left-0 right-0 text-center px-4 text-white text-sm">
+                            ${safeTitle.length > 10 ? safeTitle.substring(0, 10) + '...' : safeTitle}
+                        </div>
                     </div>
-                    <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-sm hover:bg-[#333] transition-colors">
-                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="在豆瓣查看" onclick="event.stopPropagation();">
-                            🔗
-                        </a>
+                    <div class="p-2 text-center bg-[#111]">
+                        <button onclick="fillAndSearchWithDouban('${safeTitle}')" 
+                                class="text-sm font-medium text-white truncate w-full hover:text-pink-400 transition"
+                                title="${safeTitle}">
+                            ${safeTitle}
+                        </button>
                     </div>
-                    <!-- 显示标题占位符 -->
-                    <div class="absolute bottom-8 left-0 right-0 text-center px-4 text-white text-sm">
-                        ${safeTitle.length > 10 ? safeTitle.substring(0, 10) + '...' : safeTitle}
-                    </div>
-                </div>
-                <div class="p-2 text-center bg-[#111]">
-                    <button onclick="fillAndSearchWithDouban('${safeTitle}')" 
-                            class="text-sm font-medium text-white truncate w-full hover:text-pink-400 transition"
-                            title="${safeTitle}">
-                        ${safeTitle}
-                    </button>
-                </div>
-            `;
-            
-            fragment.appendChild(card);
-        });
+                `;
+                
+                // 渲染海报图片
+                const posterContainer = card.querySelector('.poster-container');
+                
+                // 优先使用内存缓存的图片URL
+                if (posterUrl) {
+                    const img = document.createElement('img');
+                    img.src = posterUrl;
+                    img.alt = safeTitle;
+                    img.className = 'w-full h-full object-cover';
+                    img.loading = 'eager';
+                    
+                    // 图片加载失败时尝试从其他API获取海报
+                    img.onerror = function() {
+                        this.onerror = null;
+                        this.remove();
+                        // 尝试从其他API获取海报
+                        fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
+                    };
+                    
+                    posterContainer.appendChild(img);
+                } else if (cachedImage) {
+                    // 使用本地存储缓存的图片
+                    const img = document.createElement('img');
+                    img.src = cachedImage;
+                    img.alt = safeTitle;
+                    img.className = 'w-full h-full object-cover';
+                    img.loading = 'eager';
+                    
+                    // 图片加载失败时尝试从其他API获取海报
+                    img.onerror = function() {
+                        this.onerror = null;
+                        this.remove();
+                        // 尝试从其他API获取海报
+                        fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
+                    };
+                    
+                    posterContainer.appendChild(img);
+                    // 同时缓存到内存
+                    memoryCache.set(cacheKey, cachedImage);
+                    // 管理内存缓存大小
+                    manageMemoryCache();
+                } else {
+                    // 使用豆瓣默认海报作为备选
+                    if (item.cover) {
+                        const img = document.createElement('img');
+                        img.src = item.cover;
+                        img.alt = safeTitle;
+                        img.className = 'w-full h-full object-cover';
+                        img.loading = 'eager';
+                        
+                        // 图片加载失败时尝试从其他API获取海报
+                        img.onerror = function() {
+                            this.onerror = null;
+                            this.remove();
+                            // 尝试从其他API获取海报
+                            fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
+                        };
+                        
+                        posterContainer.appendChild(img);
+                        // 缓存图片到内存
+                        memoryCache.set(cacheKey, item.cover);
+                        // 管理内存缓存大小
+                        manageMemoryCache();
+                        // 异步缓存到本地存储
+                        setTimeout(() => {
+                            cachePosterImage(item.cover, cacheKey);
+                        }, 0);
+                    } else {
+                        // 没有海报时尝试从其他API获取
+                        fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
+                    }
+                }
+                
+                // 添加卡片到文档片段
+                fragment.appendChild(card);
+            });
     }
     
     // 清空并添加所有新元素
     container.innerHTML = "";
     container.appendChild(fragment);
+}
+
+// 添加默认封面
+function addDefaultCover(container, title) {
+    // 创建默认封面元素
+    const defaultCover = document.createElement('div');
+    defaultCover.className = 'w-full h-full flex items-center justify-center';
+    
+    // 添加标题文本
+    const titleEl = document.createElement('div');
+    titleEl.className = 'text-center px-4 text-white text-sm';
+    titleEl.textContent = title.length > 10 ? title.substring(0, 10) + '...' : title;
+    
+    defaultCover.appendChild(titleEl);
+    container.appendChild(defaultCover);
+}
+
+// 尝试从其他API获取海报
+async function fetchAlternativePoster(container, title, cacheKey, type = 'movie') {
+    try {
+        // 尝试从其他API获取海报
+        const alternativePoster = await getPoster(title, type);
+        
+        if (alternativePoster) {
+            // 创建图片元素
+            const img = document.createElement('img');
+            img.src = alternativePoster;
+            img.alt = title;
+            img.className = 'w-full h-full object-cover';
+            img.loading = 'eager';
+            
+            // 图片加载失败时使用默认封面
+            img.onerror = function() {
+                this.onerror = null;
+                this.remove();
+                // 添加默认封面
+                addDefaultCover(container, title);
+            };
+            
+            container.appendChild(img);
+            
+            // 缓存图片到内存
+            memoryCache.set(cacheKey, alternativePoster);
+            // 管理内存缓存大小
+            manageMemoryCache();
+            
+            // 异步缓存到本地存储
+            setTimeout(() => {
+                cachePosterImage(alternativePoster, cacheKey);
+            }, 0);
+        } else {
+            // 所有API都没有获取到海报，使用默认封面
+            addDefaultCover(container, title);
+        }
+    } catch (error) {
+        console.error('获取备选海报失败：', error);
+        // 出错时使用默认封面
+        addDefaultCover(container, title);
+    }
 }
 
 // 重置到首页
