@@ -1,12 +1,39 @@
 // 豆瓣热门电影电视剧推荐功能
 
+// 无海报模式，不需要加载海报服务
+let posterService = {
+    preloadPosters: () => {},
+    renderPoster: () => {}
+};
+
 // 豆瓣标签列表 - 修改为默认标签
-let defaultMovieTags = ['热门', '最新', '经典', '豆瓣高分', '冷门佳片', '华语', '欧美', '韩国', '日本', '动作', '喜剧', '日综', '爱情', '科幻', '悬疑', '恐怖', '治愈'];
+let defaultMovieTags = ['热门', '我的关注', '国产动画', 'Netflix', 'Disney', 'Pixar', 'DC', '周星驰', '最新', '经典', '豆瓣高分', '冷门佳片', '华语', '欧美', '韩国', '日本', '动作', '喜剧', '日综', '爱情', '科幻', '悬疑', '恐怖', '治愈'];
 let defaultTvTags = ['热门', '美剧', '英剧', '韩剧', '日剧', '国产剧', '港剧', '日本动画', '综艺', '纪录片'];
+
+
 
 // 用户标签列表 - 存储用户实际使用的标签（包含保留的系统标签和用户添加的自定义标签）
 let movieTags = [];
 let tvTags = [];
+
+// 我的关注自定义卡片列表
+const myFollowItems = [
+    { title: '剑来', rate: '9.5' },
+    { title: '凡人修仙传', rate: '9.3' },
+    { title: '遮天', rate: '9.2' },
+    { title: '仙逆', rate: '9.1' },
+    { title: '完美世界', rate: '9.0' },
+    { title: '诛仙', rate: '8.9' },
+    { title: '斗破苍穹', rate: '8.8' },
+    { title: '吞噬星空', rate: '8.7' },
+    { title: '牧神记', rate: '8.6' },
+    { title: '斗罗大陆', rate: '8.5' },
+    { title: '神印王座', rate: '8.4' },
+    { title: '武动乾坤', rate: '8.3' },
+    { title: '沧元图', rate: '8.2' },
+    { title: '师兄啊师兄', rate: '8.1' },
+    { title: '有兽焉', rate: '8.0' }
+];
 
 // 加载用户标签
 function loadUserTags() {
@@ -49,9 +76,9 @@ function saveUserTags() {
 }
 
 let doubanMovieTvCurrentSwitch = 'movie';
-let doubanCurrentTag = '热门';
+let doubanCurrentTag = '我的关注';
 let doubanPageStart = 0;
-const doubanPageSize = 16; // 一次显示的项目数量
+const doubanPageSize = 50; // 一次显示的项目数量
 
 // 初始化豆瓣功能
 function initDouban() {
@@ -107,9 +134,9 @@ function initDouban() {
     setupDoubanRefreshBtn();
     
     // 初始加载热门内容
-    if (localStorage.getItem('doubanEnabled') === 'true') {
-        renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
-    }
+        if (localStorage.getItem('doubanEnabled') === 'true') {
+            renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart).catch(console.error);
+        }
 }
 
 // 根据设置更新豆瓣区域的显示状态
@@ -126,7 +153,7 @@ function updateDoubanVisibility() {
         doubanArea.classList.remove('hidden');
         // 如果豆瓣结果为空，重新加载
         if (document.getElementById('douban-results').children.length === 0) {
-            renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
+            renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart).catch(console.error);
         }
     } else {
         doubanArea.classList.add('hidden');
@@ -283,7 +310,7 @@ function renderDoubanMovieTvSwitch() {
             
             // 初始加载热门内容
             if (localStorage.getItem('doubanEnabled') === 'true') {
-                renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
+                renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart).catch(console.error);
             }
         }
     });
@@ -356,7 +383,7 @@ function renderDoubanTags(tags) {
             if (doubanCurrentTag !== tag) {
                 doubanCurrentTag = tag;
                 doubanPageStart = 0;
-                renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
+                renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart).catch(console.error);
                 renderDoubanTags();
             }
         };
@@ -372,13 +399,13 @@ function setupDoubanRefreshBtn() {
     if (!btn) return;
     
     btn.onclick = function() {
-        doubanPageStart += doubanPageSize;
-        if (doubanPageStart > 9 * doubanPageSize) {
-            doubanPageStart = 0;
-        }
-        
-        renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
-    };
+            doubanPageStart += doubanPageSize;
+            if (doubanPageStart > 9 * doubanPageSize) {
+                doubanPageStart = 0;
+            }
+            
+            renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart).catch(console.error);
+        };
 }
 
 function fetchDoubanTags() {
@@ -406,13 +433,15 @@ function fetchDoubanTags() {
         });
 }
 
+
+
 // 渲染热门推荐内容
-function renderRecommend(tag, pageLimit, pageStart) {
+async function renderRecommend(tag, pageLimit, pageStart) {
     const container = document.getElementById("douban-results");
     if (!container) return;
 
-    const loadingOverlayHTML = `
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-10">
+    const loadingHTML = `
+        <div class="flex items-center justify-center py-8">
             <div class="flex items-center justify-center">
                 <div class="w-6 h-6 border-2 border-pink-500 border-t-transparent rounded-full animate-spin inline-block"></div>
                 <span class="text-pink-500 ml-4">加载中...</span>
@@ -420,31 +449,88 @@ function renderRecommend(tag, pageLimit, pageStart) {
         </div>
     `;
 
-    container.classList.add("relative");
-    container.insertAdjacentHTML('beforeend', loadingOverlayHTML);
+    container.innerHTML = loadingHTML;
+    
+    // 特殊处理：我的关注
+    if (tag === '我的关注') {
+        // 直接在函数内部定义我的关注自定义卡片列表
+        const myFollowItems = [
+            { title: '剑来', rate: '9.5' },
+            { title: '凡人修仙传', rate: '9.3' },
+            { title: '遮天', rate: '9.2' },
+            { title: '仙逆', rate: '9.1' },
+            { title: '完美世界', rate: '9.0' },
+            { title: '诛仙', rate: '8.9' },
+            { title: '斗破苍穹', rate: '8.8' },
+            { title: '吞噬星空', rate: '8.7' },
+            { title: '牧神记', rate: '8.6' },
+            { title: '斗罗大陆', rate: '8.5' },
+            { title: '神印王座', rate: '8.4' },
+            { title: '武动乾坤', rate: '8.3' },
+            { title: '沧元图', rate: '8.2' },
+            { title: '师兄啊师兄', rate: '8.1' },
+            { title: '有兽焉', rate: '8.0' }
+        ];
+        
+        // 构建自定义数据结构
+        const customData = {
+            subjects: myFollowItems.map(item => ({
+                title: item.title,
+                rate: item.rate,
+                url: '#'
+            }))
+        };
+        
+        console.log('我的关注数据:', customData);
+        renderDoubanCards(customData, container);
+        return;
+    }
+    
+    // 生成缓存键
+    const cacheKey = `${doubanMovieTvCurrentSwitch}_${tag}_${pageLimit}_${pageStart}`;
+    
+    // 检查缓存
+    const cachedData = doubanDataCache.get(cacheKey);
+    if (cachedData && Date.now() - cachedData.timestamp < CACHE_EXPIRY) {
+        console.log('使用缓存数据:', cacheKey);
+        renderDoubanCards(cachedData.data, container);
+        return;
+    }
     
     const target = `https://movie.douban.com/j/search_subjects?type=${doubanMovieTvCurrentSwitch}&tag=${tag}&sort=recommend&page_limit=${pageLimit}&page_start=${pageStart}`;
     
-    // 使用通用请求函数
-    fetchDoubanData(target)
-        .then(data => {
-            renderDoubanCards(data, container);
-        })
-        .catch(error => {
-            console.error("获取豆瓣数据失败：", error);
-            container.innerHTML = `
-                <div class="col-span-full text-center py-8">
-                    <div class="text-red-400">❌ 获取豆瓣数据失败，请稍后重试</div>
-                    <div class="text-gray-500 text-sm mt-2">提示：使用VPN可能有助于解决此问题</div>
-                </div>
-            `;
+    try {
+        // 使用通用请求函数
+        const data = await fetchDoubanData(target);
+        
+        // 缓存数据
+        doubanDataCache.set(cacheKey, {
+            data: data,
+            timestamp: Date.now()
         });
+        
+        // 限制缓存大小，防止内存泄漏
+        if (doubanDataCache.size > 20) {
+            const oldestKey = doubanDataCache.keys().next().value;
+            doubanDataCache.delete(oldestKey);
+        }
+        
+        renderDoubanCards(data, container);
+    } catch (error) {
+        console.error("获取豆瓣数据失败：", error);
+        container.innerHTML = `
+            <div class="col-span-full text-center py-8">
+                <div class="text-red-400">❌ 获取豆瓣数据失败，请稍后重试</div>
+                <div class="text-gray-500 text-sm mt-2">提示：使用VPN可能有助于解决此问题</div>
+            </div>
+        `;
+    }
 }
 
 async function fetchDoubanData(url) {
     // 添加超时控制
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时，减少等待时间
     
     // 设置请求选项，包括信号和头部
     const fetchOptions = {
@@ -453,16 +539,34 @@ async function fetchDoubanData(url) {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
             'Referer': 'https://movie.douban.com/',
             'Accept': 'application/json, text/plain, */*',
-        }
+            'Cache-Control': 'max-age=300' // 添加缓存控制
+        },
+        credentials: 'omit', // 不发送凭证，提高速度
+        keepalive: true // 启用连接复用
     };
 
     try {
+        // 快速失败：首先尝试直接访问（豆瓣API可能允许部分CORS请求）
+        try {
+            const directResponse = await fetch(url, {
+                ...fetchOptions,
+                mode: 'cors'
+            });
+            clearTimeout(timeoutId);
+            
+            if (directResponse.ok) {
+                return await directResponse.json();
+            }
+        } catch (directErr) {
+            // 直接访问失败，继续使用代理
+        }
+        
         // 添加鉴权参数到代理URL
         const proxiedUrl = await window.ProxyAuth?.addAuthToProxyUrl ? 
             await window.ProxyAuth.addAuthToProxyUrl(PROXY_URL + encodeURIComponent(url)) :
             PROXY_URL + encodeURIComponent(url);
             
-        // 尝试直接访问（豆瓣API可能允许部分CORS请求）
+        // 使用代理访问
         const response = await fetch(proxiedUrl, fetchOptions);
         clearTimeout(timeoutId);
         
@@ -478,7 +582,12 @@ async function fetchDoubanData(url) {
         const fallbackUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
         
         try {
-            const fallbackResponse = await fetch(fallbackUrl);
+            const fallbackResponse = await fetch(fallbackUrl, {
+                timeout: 5000,
+                headers: {
+                    'Cache-Control': 'max-age=300'
+                }
+            });
             
             if (!fallbackResponse.ok) {
                 throw new Error(`备用API请求失败! 状态: ${fallbackResponse.status}`);
@@ -496,515 +605,126 @@ async function fetchDoubanData(url) {
             console.error("豆瓣 API 备用请求也失败：", fallbackErr);
             throw fallbackErr; // 向上抛出错误，让调用者处理
         }
+    } finally {
+        clearTimeout(timeoutId);
     }
 }
 
-// WMDB API 配置
-const WMDB_CONFIG = {
-    api: 'https://api.wmdb.tv/movie/api', // 主接口（支持豆瓣ID/名称搜索）
-    posterUrl: 'https://wmdb.querydata.org/movie/poster/', // 海报前缀
-    name: 'WMDB 双语海报刮削'
-};
-
-// TMDB API 配置
-const TMDB_CONFIG = {
-    api: 'https://api.tmdb.org/3/search/movie', // 电影搜索接口
-    tvApi: 'https://api.tmdb.org/3/search/tv',  // 剧集搜索接口
-    posterUrl: 'https://image.tmdb.org/t/p/w500', // 海报地址前缀（w500 为尺寸，可改为 w780 高清）
-    name: 'TMDB 海报刮削（国内可用）'
-};
-
-// OMDb API 配置
-const OMDB_CONFIG = {
-    api: 'https://www.omdbapi.com/?apikey=68355d6b&type=movie&t=', // 固定密钥（公开测试用）
-    name: 'OMDb 海报刮削'
-};
-
-// 国内影视聚合刮削配置
-const CN_SCRAPER_CONFIG = {
-    api: 'https://api.douban-imdb-api.rovecat.com/api/v1/movie/search',
-    name: '国内影视海报刮削'
-};
-
-// 从 WMDB API 获取双语海报
-async function getWMDBPoster(title, year = '') {
-    try {
-        // 构建请求 URL
-        const params = new URLSearchParams();
-        params.append('name', title);
-        if (year) {
-            params.append('year', year);
-        }
-        const url = `${WMDB_CONFIG.api}?${params.toString()}`;
-        
-        // 发送请求
-        const response = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`WMDB API 请求失败: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // 检查返回数据
-        if (data && data.poster) {
-            return data.poster;
-        }
-        
-        return null;
-    } catch (error) {
-        console.error("获取 WMDB 海报失败：", error);
-        return null;
-    }
-}
-
-// 从 TMDB API 获取海报
-async function getTMDBPoster(title, type = 'movie') {
-    try {
-        // 构建请求 URL
-        const apiUrl = type === 'movie' ? TMDB_CONFIG.api : TMDB_CONFIG.tvApi;
-        const params = new URLSearchParams();
-        params.append('query', title);
-        params.append('language', 'zh-CN');
-        params.append('include_adult', 'false');
-        const url = `${apiUrl}?${params.toString()}`;
-        
-        // 发送请求
-        const response = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`TMDB API 请求失败: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // 检查返回数据
-        if (data && data.results && data.results.length > 0) {
-            const firstResult = data.results[0];
-            if (firstResult.poster_path) {
-                return `${TMDB_CONFIG.posterUrl}${firstResult.poster_path}`;
-            }
-        }
-        
-        return null;
-    } catch (error) {
-        console.error("获取 TMDB 海报失败：", error);
-        return null;
-    }
-}
-
-// 从 OMDb API 获取海报
-async function getOMDBPoster(title, year = '') {
-    try {
-        // 构建请求 URL
-        let url = `${OMDB_CONFIG.api}${encodeURIComponent(title)}`;
-        if (year) {
-            url += `&y=${year}`;
-        }
-        url += '&r=json';
-        
-        // 发送请求
-        const response = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`OMDb API 请求失败: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // 检查返回数据
-        if (data && data.Response === 'True' && data.Poster && data.Poster !== 'N/A') {
-            return data.Poster;
-        }
-        
-        return null;
-    } catch (error) {
-        console.error("获取 OMDb 海报失败：", error);
-        return null;
-    }
-}
-
-// 从国内影视聚合 API 获取海报
-async function getCNScraperPoster(title) {
-    try {
-        // 构建请求 URL
-        const params = new URLSearchParams();
-        params.append('keyword', title);
-        const url = `${CN_SCRAPER_CONFIG.api}?${params.toString()}`;
-        
-        // 发送请求
-        const response = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`国内影视聚合 API 请求失败: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // 检查返回数据
-        if (data && data.result && data.result.length > 0) {
-            const firstResult = data.result[0];
-            if (firstResult.poster) {
-                return firstResult.poster;
-            }
-        }
-        
-        return null;
-    } catch (error) {
-        console.error("获取国内影视聚合海报失败：", error);
-        return null;
-    }
-}
-
-// 智能选择海报刮削源
-async function getPoster(title, type = 'movie') {
-    // 优先级：WMDB → TMDB → OMDb → 国内影视聚合
-    let poster = await getWMDBPoster(title);
+// 批量渲染海报（优化并发控制）
+async function batchRenderPosters(cards, videoInfos) {
+    const batchSize = 8;
     
-    if (!poster) {
-        poster = await getTMDBPoster(title, type);
-    }
-    
-    if (!poster) {
-        poster = await getOMDBPoster(title);
-    }
-    
-    if (!poster) {
-        poster = await getCNScraperPoster(title);
-    }
-    
-    return poster;
-}
-
-// 缓存海报图片到本地
-async function cachePosterImage(url, key) {
-    try {
-        // 限制并发缓存数量
-        if (cachePosterImage.inProgress >= 3) {
-            setTimeout(() => cachePosterImage(url, key), 100);
-            return;
-        }
-        
-        cachePosterImage.inProgress = (cachePosterImage.inProgress || 0) + 1;
-        
-        const response = await fetch(url);
-        const blob = await response.blob();
-        
-        // 限制图片大小，只缓存小于1MB的图片
-        if (blob.size > 1024 * 1024) {
-            console.log(`图片 ${key} 过大，跳过缓存`);
-            cachePosterImage.inProgress--;
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onloadend = function() {
-            try {
-                const base64data = reader.result;
-                // 检查localStorage容量，避免超出限制
-                if (base64data.length < 500000) { // 限制为500KB
-                    localStorage.setItem(`poster_${key}`, base64data);
-                    localStorage.setItem(`poster_${key}_time`, Date.now().toString());
-                }
-            } catch (e) {
-                console.error("存储图片到本地失败：", e);
-            } finally {
-                cachePosterImage.inProgress--;
+    // 首先显示所有卡片的加载状态
+    cards.forEach((card, index) => {
+        if (videoInfos[index]) {
+            const posterContainer = card.querySelector('.poster-container');
+            if (posterContainer) {
+                // 添加加载状态
+                const loadingEl = document.createElement('div');
+                loadingEl.className = 'absolute inset-0 flex items-center justify-center text-white text-xs';
+                loadingEl.textContent = '加载中...';
+                posterContainer.appendChild(loadingEl);
             }
-        };
-        reader.onerror = function() {
-            console.error("读取图片失败：", reader.error);
-            cachePosterImage.inProgress--;
-        };
-        reader.readAsDataURL(blob);
-    } catch (error) {
-        console.error("缓存海报图片失败：", error);
-        cachePosterImage.inProgress--;
-    }
-}
-
-// 获取缓存的海报图片
-function getCachedPosterImage(key) {
-    try {
-        const cachedImage = localStorage.getItem(`poster_${key}`);
-        const cachedTime = localStorage.getItem(`poster_${key}_time`);
-        
-        // 检查缓存是否过期（7天）
-        if (cachedImage && cachedTime) {
-            const now = Date.now();
-            const cacheTime = parseInt(cachedTime);
-            if (now - cacheTime < 7 * 24 * 60 * 60 * 1000) {
-                return cachedImage;
-            } else {
-                // 缓存过期，删除
-                localStorage.removeItem(`poster_${key}`);
-                localStorage.removeItem(`poster_${key}_time`);
-            }
-        }
-    } catch (e) {
-        console.error("读取缓存图片失败：", e);
-    }
-    return null;
-}
-
-// 内存缓存，用于快速访问最近的海报
-const memoryCache = new Map();
-// 内存缓存大小限制
-const MAX_MEMORY_CACHE_SIZE = 50;
-
-// 管理内存缓存大小
-function manageMemoryCache() {
-    if (memoryCache.size > MAX_MEMORY_CACHE_SIZE) {
-        // 删除最旧的一半缓存
-        const keys = Array.from(memoryCache.keys());
-        const deleteCount = Math.floor(keys.length / 2);
-        for (let i = 0; i < deleteCount; i++) {
-            memoryCache.delete(keys[i]);
-        }
-    }
-}
-
-// 预加载海报图片
-function preloadPosterImages(items) {
-    items.forEach(item => {
-        if (item.cover) {
-            const img = new Image();
-            img.src = item.cover;
-            // 缓存图片到内存
-            const cacheKey = `douban_${item.id || item.title}`;
-            memoryCache.set(cacheKey, item.cover);
-            // 管理内存缓存大小
-            manageMemoryCache();
-            // 异步缓存到本地存储
-            setTimeout(() => {
-                cachePosterImage(item.cover, cacheKey);
-            }, 0);
         }
     });
+    
+    // 分批处理海报渲染
+    for (let i = 0; i < cards.length; i += batchSize) {
+        const batchCards = cards.slice(i, i + batchSize);
+        const batchInfos = videoInfos.slice(i, i + batchSize);
+        
+        const promises = batchCards.map(async (card, index) => {
+            if (batchInfos[index]) {
+                const posterContainer = card.querySelector('.poster-container');
+                if (posterContainer) {
+                    try {
+                        await posterService.renderPoster(posterContainer, batchInfos[index]);
+                    } catch (error) {
+                        console.error('Render poster error:', error);
+                    }
+                }
+            }
+        });
+        
+        await Promise.allSettled(promises);
+        
+        // 每批次之间添加小延迟，避免API过载
+        if (i + batchSize < cards.length) {
+            await new Promise(resolve => setTimeout(resolve, 50)); // 减少延迟时间
+        }
+    }
 }
+
+// 缓存豆瓣数据，提高响应速度
+const doubanDataCache = new Map();
+const CACHE_EXPIRY = 5 * 60 * 1000; // 5分钟缓存
 
 // 抽取渲染豆瓣卡片的逻辑到单独函数
 function renderDoubanCards(data, container) {
+    // 强制设置容器为网格布局
+    container.className = "grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4";
+    
     // 创建文档片段以提高性能
     const fragment = document.createDocumentFragment();
     
     // 如果没有数据
     if (!data.subjects || data.subjects.length === 0) {
         const emptyEl = document.createElement("div");
-        emptyEl.className = "col-span-full text-center py-8";
+        emptyEl.className = "col-span-full text-center py-12 bg-[#111] rounded-lg border border-[#333]";
         emptyEl.innerHTML = `
             <div class="text-pink-500">❌ 暂无数据，请尝试其他分类或刷新</div>
         `;
         fragment.appendChild(emptyEl);
     } else {
-        // 立即预加载海报图片，不延迟
-        preloadPosterImages(data.subjects);
-        
-        // 循环创建每个影视卡片
-            data.subjects.forEach(item => {
-                const card = document.createElement("div");
-                card.className = "bg-[#111] hover:bg-[#222] transition-all duration-300 rounded-lg overflow-hidden flex flex-col transform hover:scale-105 shadow-md hover:shadow-lg";
-                
-                // 生成卡片内容，确保安全显示（防止XSS）
-                const safeTitle = item.title
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;');
-                
-                const safeRate = (item.rate || "暂无")
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
-                
-                // 获取缓存的海报图片
-                const cacheKey = `douban_${item.id || item.title}`;
-                
-                // 优先检查内存缓存
-                let posterUrl = memoryCache.get(cacheKey);
-                // 然后检查本地存储缓存
-                const cachedImage = !posterUrl ? getCachedPosterImage(cacheKey) : null;
-                
-                // 为不同设备优化卡片布局
-                card.innerHTML = `
-                    <div class="poster-container relative w-full aspect-[2/3] overflow-hidden cursor-pointer bg-black flex items-center justify-center" onclick="fillAndSearchWithDouban('${safeTitle}')">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
-                        <div class="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-sm">
-                            <span class="text-yellow-400">★</span> ${safeRate}
-                        </div>
-                        <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-sm hover:bg-[#333] transition-colors">
-                            <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="在豆瓣查看" onclick="event.stopPropagation();">
-                                🔗
-                            </a>
-                        </div>
-                        <!-- 显示标题占位符 -->
-                        <div class="absolute bottom-8 left-0 right-0 text-center px-4 text-white text-sm">
-                            ${safeTitle.length > 10 ? safeTitle.substring(0, 10) + '...' : safeTitle}
-                        </div>
-                    </div>
-                    <div class="p-2 text-center bg-[#111]">
+        // 批量创建卡片HTML，减少DOM操作
+        const cardsHTML = data.subjects.map(item => {
+            // 生成卡片内容，确保安全显示（防止XSS）
+            const safeTitle = item.title
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+            
+            const safeRate = (item.rate || "暂无")
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            // 水平布局，所有内容放在一行
+            return `
+                <div class="bg-[#111] hover:bg-[#222] transition-all duration-300 rounded-lg overflow-hidden flex items-center p-3 cursor-pointer shadow-md hover:shadow-lg border border-[#222] hover:border-[#444]">
+                    <div class="flex-1 min-w-0 mr-3">
                         <button onclick="fillAndSearchWithDouban('${safeTitle}')" 
-                                class="text-sm font-medium text-white truncate w-full hover:text-pink-400 transition"
+                                class="text-sm font-medium text-white hover:text-pink-400 transition truncate block w-full text-left"
                                 title="${safeTitle}">
                             ${safeTitle}
                         </button>
                     </div>
-                `;
-                
-                // 渲染海报图片
-                const posterContainer = card.querySelector('.poster-container');
-                
-                // 优先使用内存缓存的图片URL
-                if (posterUrl) {
-                    const img = document.createElement('img');
-                    img.src = posterUrl;
-                    img.alt = safeTitle;
-                    img.className = 'w-full h-full object-cover';
-                    img.loading = 'eager';
-                    
-                    // 图片加载失败时尝试从其他API获取海报
-                    img.onerror = function() {
-                        this.onerror = null;
-                        this.remove();
-                        // 尝试从其他API获取海报
-                        fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
-                    };
-                    
-                    posterContainer.appendChild(img);
-                } else if (cachedImage) {
-                    // 使用本地存储缓存的图片
-                    const img = document.createElement('img');
-                    img.src = cachedImage;
-                    img.alt = safeTitle;
-                    img.className = 'w-full h-full object-cover';
-                    img.loading = 'eager';
-                    
-                    // 图片加载失败时尝试从其他API获取海报
-                    img.onerror = function() {
-                        this.onerror = null;
-                        this.remove();
-                        // 尝试从其他API获取海报
-                        fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
-                    };
-                    
-                    posterContainer.appendChild(img);
-                    // 同时缓存到内存
-                    memoryCache.set(cacheKey, cachedImage);
-                    // 管理内存缓存大小
-                    manageMemoryCache();
-                } else {
-                    // 使用豆瓣默认海报作为备选
-                    if (item.cover) {
-                        const img = document.createElement('img');
-                        img.src = item.cover;
-                        img.alt = safeTitle;
-                        img.className = 'w-full h-full object-cover';
-                        img.loading = 'eager';
-                        
-                        // 图片加载失败时尝试从其他API获取海报
-                        img.onerror = function() {
-                            this.onerror = null;
-                            this.remove();
-                            // 尝试从其他API获取海报
-                            fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
-                        };
-                        
-                        posterContainer.appendChild(img);
-                        // 缓存图片到内存
-                        memoryCache.set(cacheKey, item.cover);
-                        // 管理内存缓存大小
-                        manageMemoryCache();
-                        // 异步缓存到本地存储
-                        setTimeout(() => {
-                            cachePosterImage(item.cover, cacheKey);
-                        }, 0);
-                    } else {
-                        // 没有海报时尝试从其他API获取
-                        fetchAlternativePoster(posterContainer, safeTitle, cacheKey, doubanMovieTvCurrentSwitch);
-                    }
-                }
-                
-                // 添加卡片到文档片段
-                fragment.appendChild(card);
-            });
+                    <div class="flex items-center space-x-3">
+                        <div class="text-yellow-400 text-xs font-medium whitespace-nowrap">
+                            <span>★</span> ${safeRate}
+                        </div>
+                        <div class="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-[#333]">
+                            <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="在豆瓣查看" onclick="event.stopPropagation();">
+                                🔗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // 使用innerHTML一次性插入所有卡片，提高性能
+        const cardsContainer = document.createElement("div");
+        cardsContainer.innerHTML = cardsHTML;
+        
+        // 将所有卡片添加到文档片段
+        while (cardsContainer.firstChild) {
+            fragment.appendChild(cardsContainer.firstChild);
+        }
     }
     
     // 清空并添加所有新元素
     container.innerHTML = "";
     container.appendChild(fragment);
-}
-
-// 添加默认封面
-function addDefaultCover(container, title) {
-    // 创建默认封面元素
-    const defaultCover = document.createElement('div');
-    defaultCover.className = 'w-full h-full flex items-center justify-center';
-    
-    // 添加标题文本
-    const titleEl = document.createElement('div');
-    titleEl.className = 'text-center px-4 text-white text-sm';
-    titleEl.textContent = title.length > 10 ? title.substring(0, 10) + '...' : title;
-    
-    defaultCover.appendChild(titleEl);
-    container.appendChild(defaultCover);
-}
-
-// 尝试从其他API获取海报
-async function fetchAlternativePoster(container, title, cacheKey, type = 'movie') {
-    try {
-        // 尝试从其他API获取海报
-        const alternativePoster = await getPoster(title, type);
-        
-        if (alternativePoster) {
-            // 创建图片元素
-            const img = document.createElement('img');
-            img.src = alternativePoster;
-            img.alt = title;
-            img.className = 'w-full h-full object-cover';
-            img.loading = 'eager';
-            
-            // 图片加载失败时使用默认封面
-            img.onerror = function() {
-                this.onerror = null;
-                this.remove();
-                // 添加默认封面
-                addDefaultCover(container, title);
-            };
-            
-            container.appendChild(img);
-            
-            // 缓存图片到内存
-            memoryCache.set(cacheKey, alternativePoster);
-            // 管理内存缓存大小
-            manageMemoryCache();
-            
-            // 异步缓存到本地存储
-            setTimeout(() => {
-                cachePosterImage(alternativePoster, cacheKey);
-            }, 0);
-        } else {
-            // 所有API都没有获取到海报，使用默认封面
-            addDefaultCover(container, title);
-        }
-    } catch (error) {
-        console.error('获取备选海报失败：', error);
-        // 出错时使用默认封面
-        addDefaultCover(container, title);
-    }
 }
 
 // 重置到首页
@@ -1223,8 +943,8 @@ function resetTagsToDefault() {
     saveUserTags();
     
     // 重新渲染标签和内容
-    renderDoubanTags();
-    renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
+        renderDoubanTags();
+        renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart).catch(console.error);
     
     showToast('已恢复默认标签', 'success');
 }
