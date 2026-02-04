@@ -583,7 +583,16 @@ async function handleMultipleCustomSearch(searchQuery, customApiUrls) {
         if (requestUrl.pathname.startsWith('/api/')) {
             if (window.isPasswordProtected && window.isPasswordVerified) {
                 if (window.isPasswordProtected() && !window.isPasswordVerified()) {
-                    return;
+                    // 对于API请求，返回401错误
+                    return new Response(JSON.stringify({
+                        code: 401,
+                        msg: '未授权访问',
+                    }), {
+                        status: 401,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
                 }
             }
             try {
@@ -607,7 +616,7 @@ async function handleMultipleCustomSearch(searchQuery, customApiUrls) {
             }
         }
         
-        // 非API请求使用原始fetch
+        // 非API请求（如外部海报API）直接使用原始fetch，不受密码保护影响
         return originalFetch.apply(this, arguments);
     };
 })();

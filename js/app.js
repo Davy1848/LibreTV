@@ -11,6 +11,14 @@ let currentVideoTitle = '';
 // 全局变量用于倒序状态
 let episodesReversed = false;
 
+// 更新选中的API数量显示
+function updateSelectedApiCount() {
+    const countEl = document.getElementById('selectedApiCount');
+    if (countEl) {
+        countEl.textContent = selectedAPIs.length;
+    }
+}
+
 // 页面初始化
 document.addEventListener('DOMContentLoaded', function () {
     // 初始化API复选框

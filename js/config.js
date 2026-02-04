@@ -113,6 +113,11 @@ const API_SITES = {
     lzi: {
         api: 'https://cj.lziapi.com/api.php/provide/vod/',
         name: '量子资源站'
+    },
+    testSource: {
+        api: 'https://www.example.com/api.php/provide/vod',
+        name: '空内容测试源',
+        adult: true
     }
     //ARCHIVE https://telegra.ph/APIs-08-12
 };
@@ -208,3 +213,56 @@ const CUSTOM_API_CONFIG = {
 
 // 隐藏内置黄色采集站API的变量
 const HIDE_BUILTIN_ADULT_APIS = false;
+
+// ===================== 模块1：海报渲染核心配置（可配置化，无需改代码）=====================
+const POSTER_CONFIG = {
+  apiPosterFields: ['vod_pic', 'pic', 'cover', 'poster'], // API海报字段优先级
+  scraperSources: [ // 刮削源优先级：豆瓣→TMDB，自动降级
+    { name: 'douban', searchUrl: 'https://movie.douban.com/j/subject_suggest?q={title}', posterPath: 'img', timeout: 8000 },
+    { name: 'tmdb', searchUrl: 'https://api.tmdb.org/3/search/multi?query={title}&language=zh-CN', posterPath: 'results[0].poster_path', posterPrefix: 'https://image.tmdb.org/t/p/w500', timeout: 6000 }
+  ],
+  cache: { enabled: true, ttl: 7 * 24 * 60 * 60 * 1000, storageKey: 'libretv_poster_cache' }, // 7天缓存
+  fallback: { defaultPoster: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iODAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIj7lm73kuK3lm73PC90ZXh0Pjwvc3ZnPg==' },
+  performance: { lazyLoad: true, preloadCount: 3 } // 懒加载+预加载3张
+};
+
+// ===================== 模块2：视频播放核心配置（可配置化，无需改代码）=====================
+const VIDEO_CONFIG = {
+  // 播放器内核配置（hls.js核心参数，针对M3U8优化）
+  player: {
+    hls: {
+      maxBufferLength: 30, // 最大缓冲30秒（快进减少冗余）
+      maxBufferSize: 10 * 1024 * 1024, // 最大缓冲10MB，避免内存溢出
+      enableWorker: true, // WebWorker解析M3U8，不阻塞主线程
+      preloadNextLevel: true, // 预加载下一个码率切片
+      nudgeMaxRetry: 3, // 切片请求失败重试3次
+      highBufferWatchdogPeriod: 2 // 2秒检测一次缓冲，快速补片
+    },
+    seekPreloadCount: 5 // 快进后预加载后续5个切片
+  },
+  // 视频网络请求配置（切片/M3U8请求优化）
+  network: {
+    timeout: 10000, // 切片请求超时10秒
+    parallel: 5, // 最大并发5个（浏览器默认6，留1个给其他请求）
+    retry: 3, // 失败重试3次
+    headers: { // 模拟浏览器头，避免源站拦截
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+      'Referer': 'https://www.baidu.com/',
+      'Accept': '*/*',
+      'Connection': 'keep-alive' // 长连接，减少TCP握手
+    }
+  },
+  // 视频三级缓存配置（M3U8+切片）
+  cache: {
+    m3u8: { ttl: 5 * 60 * 1000, maxCount: 50, storageKey: 'libretv_m3u8_cache' }, // M3U8内存缓存5分钟
+    segment: {
+      lsTTL: 24 * 60 * 60 * 1000, lsMaxSize: 4 * 1024 * 1024, lsStorageKey: 'libretv_segment_cache', // LocalStorage缓存4MB
+      swTTL: 7 * 24 * 60 * 60 * 1000, swCacheName: 'libretv-video-cache-v1' // Service Worker缓存7天
+    }
+  }
+};
+
+// 暴露所有配置到全局
+window.PROXY_URL = PROXY_URL;
+window.POSTER_CONFIG = POSTER_CONFIG;
+window.VIDEO_CONFIG = VIDEO_CONFIG;
