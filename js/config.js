@@ -22,319 +22,304 @@ const SITE_CONFIG = {
 
 // API站点配置
 const API_SITES = {
-    "api_site": {
-        "电影天堂_3": {
-            "name": "电影天堂",
-            "api": "http://caiji.dyttzyapi.com/api.php/provide/vod?ac=list",
-            "weight": 7,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "猫眼资源_4": {
-            "name": "猫眼资源",
-            "api": "https://api.maoyanapi.top/api.php/provide/vod?ac=list",
-            "weight": 6,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "360资源_5": {
-            "name": "360 资源",
-            "api": "https://360zyzz.com/api.php/provide/vod?ac=list",
-            "weight": 5,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "最大资源_6": {
-            "name": "最大资源",
-            "api": "https://api.zuidapi.com/api.php/provide/vod?ac=list",
-            "weight": 4,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "香蕉资源_7": {
-            "name": "香蕉资源",
-            "api": "https://www.xiangjiaozyw.com/api.php/provide/vod?ac=list",
-            "weight": 3,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "非凡资源_8": {
-            "name": "非凡资源",
-            "api": "https://api.ffzyapi.com/api.php/provide/vod?ac=list",
-            "weight": 2,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "155资源_10": {
-            "name": "155资源",
-            "api": "https://155api.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "樱花资源_12": {
-            "name": "樱花资源",
-            "api": "https://m3u8.apiyhzy.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "AIvin_13": {
-            "name": "AIvin",
-            "api": "http://lbapiby.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "森林资源_14": {
-            "name": "森林资源",
-            "api": "https://beiyong.slapibf.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "细胞资源_15": {
-            "name": "细胞资源",
-            "api": "https://www.xxibaozyw.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "乐播资源_16": {
-            "name": "乐播资源",
-            "api": "https://lbapi9.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "天涯资源_17": {
-            "name": "天涯资源",
-            "api": "https://tyyszy.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "极速资源_18": {
-            "name": "极速资源",
-            "api": "https://jszyapi.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "大地资源_19": {
-            "name": "大地资源",
-            "api": "https://dadiapi.com/feifei?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "U酷影视_20": {
-            "name": "U酷影视",
-            "api": "https://api.ukuapi88.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "无尽资源_21": {
-            "name": "无尽资源",
-            "api": "https://api.wujinapi.me/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "卧龙资源_23": {
-            "name": "卧龙资源",
-            "api": "https://wolongzyw.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "光速资源_24": {
-            "name": "光速资源",
-            "api": "https://api.guangsuapi.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "百度云zy_25": {
-            "name": "百度云zy",
-            "api": "https://pz.168188.dpdns.org/?url=https://api.apibdzy.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "豆豆资源_27": {
-            "name": "豆豆资源",
-            "api": "https://api.douapi.cc/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "新浪资源_28": {
-            "name": "新浪资源",
-            "api": "https://api.xinlangapi.com/xinlangapi.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "爱奇艺_29": {
-            "name": "爱奇艺",
-            "api": "https://iqiyizyapi.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "滴滴资源_31": {
-            "name": "滴滴资源",
-            "api": "https://api.ddapi.cc/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "豪华资源_33": {
-            "name": "豪华资源",
-            "api": "https://pz.168188.dpdns.org/?url=https://hhzyapi.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "暴风资源_35": {
-            "name": "暴风资源",
-            "api": "https://bfzyapi.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "旺旺资源_36": {
-            "name": "旺旺资源",
-            "api": "https://api.wwzy.tv/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "速播资源_37": {
-            "name": "速播资源",
-            "api": "https://subocaiji.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "辣椒资源_38": {
-            "name": "辣椒资源",
-            "api": "https://pz.168188.dpdns.org/?url=https://apilj.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "优优资源_40": {
-            "name": "优优资源",
-            "api": "https://www.yyzywcj.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "茅台资源_41": {
-            "name": "茅台资源",
-            "api": "https://caiji.maotaizy.cc/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "魔都动漫_42": {
-            "name": "魔都动漫",
-            "api": "https://caiji.moduapi.cc/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "豆瓣资源_43": {
-            "name": "豆瓣资源",
-            "api": "https://caiji.dbzy5.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "艾旦影视_44": {
-            "name": "艾旦影视",
-            "api": "https://pz.168188.dpdns.org/?url=https://lovedan.net/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "量子影视_45": {
-            "name": "量子影视",
-            "api": "https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "金鹰点播_46": {
-            "name": "金鹰点播",
-            "api": "https://jinyingzy.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "魔都资源_47": {
-            "name": "魔都资源",
-            "api": "https://www.mdzyapi.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "旺旺短剧_48": {
-            "name": "旺旺短剧",
-            "api": "https://wwzy.tv/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        },
-        "如意资源_49": {
-            "name": "如意资源",
-            "api": "https://pz.168188.dpdns.org/?url=https://cj.rycjapi.com/api.php/provide/vod?ac=list",
-            "weight": 1,
-            "enable": true,
-            "has_poster": false,
-            "poster_fields": []
-        }
+  "api_site": {
+    "电影天堂_0": {
+      "name": "电影天堂",
+      "api": "http://caiji.dyttzyapi.com/api.php/provide/vod",
+      "weight": 10,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "猫眼资源_1": {
+      "name": "猫眼资源",
+      "api": "https://api.maoyanapi.top/api.php/provide/vod",
+      "weight": 9,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "非凡资源_2": {
+      "name": "非凡资源",
+      "api": "https://api.ffzyapi.com/api.php/provide/vod",
+      "weight": 8,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "樱花资源_3": {
+      "name": "樱花资源",
+      "api": "https://m3u8.apiyhzy.com/api.php/provide/vod",
+      "weight": 7,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "360资_4": {
+      "name": "360 资源",
+      "api": "https://360zyzz.com/api.php/provide/vod",
+      "weight": 6,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "最大资源_5": {
+      "name": "最大资源",
+      "api": "https://api.zuidapi.com/api.php/provide/vod",
+      "weight": 5,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "暴风资源_6": {
+      "name": "暴风资源",
+      "api": "https://bfzyapi.com/api.php/provide/vod",
+      "weight": 4,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "极速资源_7": {
+      "name": "极速资源",
+      "api": "https://jszyapi.com/api.php/provide/vod",
+      "weight": 3,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "豪华资源_8": {
+      "name": "豪华资源",
+      "api": "https://pz.168188.dpdns.org/?url=https://hhzyapi.com/api.php/provide/vod",
+      "weight": 2,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "旺旺资源_9": {
+      "name": "旺旺资源",
+      "api": "https://api.wwzy.tv/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "光速资源_10": {
+      "name": "光速资源",
+      "api": "https://api.guangsuapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "U酷影视_11": {
+      "name": "U酷影视",
+      "api": "https://api.ukuapi88.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "卧龙资源_12": {
+      "name": "卧龙资源",
+      "api": "https://wolongzyw.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "旺旺短剧_13": {
+      "name": "旺旺短剧",
+      "api": "https://wwzy.tv/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "虎牙资源_14": {
+      "name": "虎牙资源",
+      "api": "https://www.huyaapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "鸭鸭资源_15": {
+      "name": "鸭鸭资源",
+      "api": "https://cj.yayazy.net/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "量子影视_16": {
+      "name": "量子影视",
+      "api": "https://cj.lziapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "无尽影视_17": {
+      "name": "无尽影视",
+      "api": "https://api.wujinapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "爱奇艺_18": {
+      "name": "-爱奇艺-",
+      "api": "https://iqiyizyapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "豆瓣资源_19": {
+      "name": "豆瓣资源",
+      "api": "https://caiji.dbzy5.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "金鹰点播_20": {
+      "name": "金鹰点播",
+      "api": "https://jinyingzy.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "茅台资源_21": {
+      "name": "茅台资源",
+      "api": "https://caiji.maotaizy.cc/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "优质资源_22": {
+      "name": "优质资源",
+      "api": "https://api.yzzy-api.com/inc/apijson.php",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "最大点播_23": {
+      "name": "最大点播",
+      "api": "https://zuidazy.me/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "百度云zy_24": {
+      "name": "百度云zy",
+      "api": "https://pz.168188.dpdns.org/?url=https://api.apibdzy.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "速播资源_25": {
+      "name": "速播资源",
+      "api": "https://subocaiji.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "无尽资源_26": {
+      "name": "无尽资源",
+      "api": "https://api.wujinapi.me/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "魔都动漫_27": {
+      "name": "魔都动漫",
+      "api": "https://caiji.moduapi.cc/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "新浪资源_28": {
+      "name": "新浪资源",
+      "api": "https://api.xinlangapi.com/xinlangapi.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "金蝉影视_29": {
+      "name": "金蝉影视",
+      "api": "https://zy.jinchancaiji.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "索尼资源_30": {
+      "name": "索尼资源",
+      "api": "https://suoniapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "闪电资源_31": {
+      "name": "闪电资源",
+      "api": "https://xsd.sdzyapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "红牛资源_32": {
+      "name": "红牛资源",
+      "api": "https://www.hongniuzy2.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "魔都资源_33": {
+      "name": "魔都资源",
+      "api": "https://www.mdzyapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "如意资源_34": {
+      "name": "如意资源",
+      "api": "https://pz.168188.dpdns.org/?url=https://cj.rycjapi.com/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "艾旦影视_35": {
+      "name": "艾旦影视",
+      "api": "https://pz.168188.dpdns.org/?url=https://lovedan.net/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    },
+    "快车资源_36": {
+      "name": "快车资源",
+      "api": "https://caiji.kuaichezy.org/api.php/provide/vod",
+      "weight": 1,
+      "enable": true,
+      "has_poster": false,
+      "poster_fields": []
+    }
+  }
 };
 
 // 定义合并方法
