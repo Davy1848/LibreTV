@@ -22,7 +22,6 @@ const SITE_CONFIG = {
 
 // API站点配置
 const API_SITES = {
-  "api_site": {
     "电影天堂": {
       "name": "电影天堂",
       "api": "http://caiji.dyttzyapi.com/api.php/provide/vod",
@@ -171,7 +170,6 @@ const API_SITES = {
       "name": "快车资源",
       "api": "https://caiji.kuaichezy.org/api.php/provide/vod",
     }
-  }
 };
 
 // 定义合并方法
