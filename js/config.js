@@ -319,7 +319,6 @@ const API_SITES = {
       "has_poster": false,
       "poster_fields": []
     }
-  }
 };
 
 // 定义合并方法
