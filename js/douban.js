@@ -365,20 +365,12 @@ function renderDoubanTags(tags) {
     });
 }
 
-// 设置换一批按钮事件
+// 设置换一批按钮事件 - 固定海报墙后隐藏按钮
 function setupDoubanRefreshBtn() {
-    // 修复ID，使用正确的ID douban-refresh 而不是 douban-refresh-btn
     const btn = document.getElementById('douban-refresh');
     if (!btn) return;
     
-    btn.onclick = function() {
-        doubanPageStart += doubanPageSize;
-        if (doubanPageStart > 9 * doubanPageSize) {
-            doubanPageStart = 0;
-        }
-        
-        renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
-    };
+    btn.style.display = 'none';
 }
 
 function fetchDoubanTags() {
@@ -406,39 +398,32 @@ function fetchDoubanTags() {
         });
 }
 
-// 渲染热门推荐内容
+// 固定海报墙数据 - 国产动画/电视剧
+const fixedPosters = [
+    { title: '仙逆', cover: 'https://image.tmdb.org/t/p/w500/6AVM12M6UunFmX0bSmP2o4N5Bnt.jpg', rate: '8.5' },
+    { title: '吞噬星空', cover: 'https://image.tmdb.org/t/p/w500/scQGhUCeJ1WbBLiBeSEKJ24iB8M.jpg', rate: '8.2' },
+    { title: '遮天', cover: 'https://image.tmdb.org/t/p/w500/iRNxhC66JECMEudVdAET40aWGhR.jpg', rate: '8.0' },
+    { title: '剑来', cover: 'https://image.tmdb.org/t/p/w500/cO6I2iwcTns4SueRM5HyL4fpiX9.jpg', rate: '8.3' },
+    { title: '沧元图', cover: 'https://image.tmdb.org/t/p/w500/oF48FTeSqd1AIUVsMVXTAGriObV.jpg', rate: '7.8' },
+    { title: '盘龙', cover: 'https://image.tmdb.org/t/p/w500/41nbfTB1qmX59JOeQoyXvpMTxXI.jpg', rate: '7.5' },
+    { title: '将夜', cover: 'https://image.tmdb.org/t/p/w500/vJXXF8vX5g2DUL3cr04tdUdKgAC.jpg', rate: '8.1' },
+    { title: '神墓', cover: 'https://image.tmdb.org/t/p/w500/p95LTeh1Vw8NmOENT48xHIds55p.jpg', rate: '7.6' },
+    { title: '完美世界', cover: 'https://image.tmdb.org/t/p/w500/gGhqTA28FH9EITIq27CWmeXC3KZ.jpg', rate: '8.4' },
+    { title: '深空彼岸', cover: 'https://image.tmdb.org/t/p/w500/bi3HXIWAzeXzs8ns9f1FVRwF1Zc.jpg', rate: '7.9' },
+    { title: '斗罗大陆 II 绝世唐门', cover: 'https://image.tmdb.org/t/p/w500/g2aswQ7uRO7dccPhD6BUaTL02ju.jpg', rate: '8.0' },
+    { title: '凡人修仙传', cover: 'https://image.tmdb.org/t/p/w500/i6SYuRHPtODpZ8VX9ql21nj0tDq.jpg', rate: '8.6' },
+    { title: '光阴之外', cover: 'https://image.tmdb.org/t/p/w500/n5GdyNVU3YmooHyagI55BSpuzmc.jpg', rate: '7.7' },
+    { title: '斗破苍穹', cover: 'https://image.tmdb.org/t/p/w500/a9bJPlezCXF6u0siDxf7cZaSXaJ.jpg', rate: '8.3' },
+    { title: '牧神记', cover: 'https://image.tmdb.org/t/p/w500/jPHitNQ1fuKK6aPZ6eCPiFq9XhG.jpg', rate: '7.4' },
+    { title: '星辰变', cover: 'https://image.tmdb.org/t/p/w500/6AVM12M6UunFmX0bSmP2o4N5Bnt.jpg', rate: '8.2' }
+];
+
+// 渲染热门推荐内容 - 固定海报墙
 function renderRecommend(tag, pageLimit, pageStart) {
     const container = document.getElementById("douban-results");
     if (!container) return;
 
-    const loadingOverlayHTML = `
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-10">
-            <div class="flex items-center justify-center">
-                <div class="w-6 h-6 border-2 border-pink-500 border-t-transparent rounded-full animate-spin inline-block"></div>
-                <span class="text-pink-500 ml-4">加载中...</span>
-            </div>
-        </div>
-    `;
-
-    container.classList.add("relative");
-    container.insertAdjacentHTML('beforeend', loadingOverlayHTML);
-    
-    const target = `https://movie.douban.com/j/search_subjects?type=${doubanMovieTvCurrentSwitch}&tag=${tag}&sort=recommend&page_limit=${pageLimit}&page_start=${pageStart}`;
-    
-    // 使用通用请求函数
-    fetchDoubanData(target)
-        .then(data => {
-            renderDoubanCards(data, container);
-        })
-        .catch(error => {
-            console.error("获取豆瓣数据失败：", error);
-            container.innerHTML = `
-                <div class="col-span-full text-center py-8">
-                    <div class="text-red-400">❌ 获取豆瓣数据失败，请稍后重试</div>
-                    <div class="text-gray-500 text-sm mt-2">提示：使用VPN可能有助于解决此问题</div>
-                </div>
-            `;
-        });
+    renderDoubanCards({ subjects: fixedPosters }, container);
 }
 
 async function fetchDoubanData(url) {
